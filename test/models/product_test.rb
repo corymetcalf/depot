@@ -73,4 +73,19 @@ class ProductTest < ActiveSupport::TestCase
                  product.errors[:title]
   end
   
+  test "product requires a name at least 5 characters long" do
+    product = Product.new(description: "things to say about it",
+                          price: 1, 
+                          image_url: "fred.gif")
+    product.title = "Ruby"
+    assert product.invalid?
+    assert_equal ["must be 5 characters minimum"],
+    product.errors[:title]
+  
+    product.title = "Ruby on Rails"
+    assert product.valid?
+
+  end
+
+  
 end
