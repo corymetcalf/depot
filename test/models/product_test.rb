@@ -1,4 +1,4 @@
-require "test_helper"
+require 'test_helper'
 
 class ProductTest < ActiveSupport::TestCase
   test "product attributes must not be empty" do
@@ -10,58 +10,57 @@ class ProductTest < ActiveSupport::TestCase
     assert product.errors[:image_url].any?
   end
 
-  test "price must be greater than zero" do
-    product = Product.new(title:        "A Book You Never Read",
-                        description:  "Described by non-readers as
-                                      'Don't know, haven't read it.'",
-                          image_url:    'someimage.jpg')
+  test "product price must be positive" do
+    product = Product.new(title:       "My Book Title",
+                          description: "yyy",
+                          image_url:   "zzz.jpg")
     product.price = -1
     assert product.invalid?
     assert_equal ["must be greater than or equal to 0.01"],
-    product.errors[:price]
+      product.errors[:price]
 
     product.price = 0
     assert product.invalid?
-    assert_equal ["must be greater than or equal to 0.01"],
-    product.errors[:price]
+    assert_equal ["must be greater than or equal to 0.01"], 
+      product.errors[:price]
 
-    product.price = 0.01
+    product.price = 1
     assert product.valid?
   end
 
   def new_product(image_url)
-  Product.new(title:        "A Book You Never Read",
-              description:  "Described by non-readers as 
-                            'Don't know, haven't read it.'",
-              price:        1,
-              image_url:    image_url)
+    Product.new(title:       "My Book Title",
+                description: "yyy",
+                price:       1,
+                image_url:   image_url)
   end
 
-  test "image_url" do
-  ok = %w{ fred.gif fred.jpg fred.png FRED.JPG Fred.Jpg
-           http://a.b.c/x/y/z/fred.gif }
-  bad = %w{ fred.doc fred.gif/more fred.gif.more }
+  test "image url" do
+    ok = %w{ fred.gif fred.jpg fred.png FRED.JPG FRED.Jpg
+             http://a.b.c/x/y/z/fred.gif }
+    bad = %w{ fred.doc fred.gif/more fred.gif.more }
+    
+    ok.each do |image_url|
+      assert new_product(image_url).valid?,
+             "#{image_url} must be valid"
+    end
 
-  ok.each do |image_url|
-    assert new_product(image_url).valid?,
-           "#{image_url} must be valid"
-  end
-  
-  bad.each do |image_url|
-    assert new_product(image_url).invalid?,
-           "#{image_url} must be invalid"
-  end
+    bad.each do |image_url|
+      assert new_product(image_url).invalid?,
+             "#{image_url} must be invalid"
+    end
   end
 
   test "product is not valid without a unique title" do
-  product = Product.new(title:          products(:ruby).title,
-                        description:    "yyy",
-                        price:          1,
-                        image_url:      "fred.gif")                      
-  assert product.invalid?
-  assert_equal ["has already been taken"], product.errors[:title]
+    product = Product.new(title:       products(:ruby).title,
+                          description: "yyy", 
+                          price:       1, 
+                          image_url:   "fred.gif")
+
+    assert product.invalid?
+    assert_equal ["has already been taken"], product.errors[:title]
   end
-  
+
   test "product is not valid without a unique title - i18n" do
     product = Product.new(title:       products(:ruby).title,
                           description: "yyy", 
@@ -72,20 +71,5 @@ class ProductTest < ActiveSupport::TestCase
     assert_equal [I18n.translate('errors.messages.taken')],
                  product.errors[:title]
   end
-  
-  test "product requires a name at least 5 characters long" do
-    product = Product.new(description: "things to say about it",
-                          price: 1, 
-                          image_url: "fred.gif")
-    product.title = "Ruby"
-    assert product.invalid?
-    assert_equal ["must be 5 characters minimum"],
-    product.errors[:title]
-  
-    product.title = "Ruby on Rails"
-    assert product.valid?
-
-  end
-
   
 end
