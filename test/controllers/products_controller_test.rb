@@ -58,7 +58,7 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
           title: @title,
         }
       }
-    
+      
     assert_redirected_to product_url(@product)
   end
 
