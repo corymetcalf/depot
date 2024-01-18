@@ -8,6 +8,15 @@ class Order < ApplicationRecord
 #...
   validates :name, :address, :email, presence: true
   validates :pay_type, inclusion: pay_types.keys
+  
+
+  if pay_types[:pay_type] == 0
+    validates :account_number, :routing_number, presence: true
+  elsif pay_types[:pay_type] == 1
+    validates :credit_card_number, :expiration_date, presence: true
+  elsif pay_types[:pay_type] == 2
+    validates :po_number, presence: true
+  end
 
   def add_line_items_from_cart(cart)
     cart.line_items.each do |item|
