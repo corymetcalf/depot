@@ -1,0 +1,6 @@
+Dear <%= order.name %>
+Thank you for order from The Pragmatic Store.
+Your order contained the following items:
+<%= render @order.line_items -%>
+We'll send you a separate email with shipping details as
+soon as your order ships!

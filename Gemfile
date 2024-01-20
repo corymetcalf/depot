@@ -44,6 +44,10 @@ gem "tzinfo-data", platforms: %i[ windows jruby ]
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
 
+# Formatting magic
+gem 'rubocop', require: false
+gem 'rubocop-rails', require: false
+
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
@@ -68,3 +72,7 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+#START:as_xml
+gem 'activemodel-serializers-xml'
+#END:as_xml
